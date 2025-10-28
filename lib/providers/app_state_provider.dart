@@ -2,6 +2,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:i12_into_012/models/app_state.dart' show AppState;
 import 'package:i12_into_012/models/todo.dart' show Todo;
 
+final refAppState = NotifierProvider<AppStateNotifier, AppState>(
+  () => AppStateNotifier(),
+);
+
 class AppStateNotifier extends Notifier<AppState> {
   @override
   AppState build() => AppState(
