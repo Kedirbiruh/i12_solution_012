@@ -47,7 +47,9 @@ lib/
   - `asksForDeletionConfirmation (bool)`: Deletion confirmation setting
 - Methods:
   - `toJson()`: Convert to JSON for storage (returns `Map<String, dynamic>`)
-  - `fromJson()`: Create AppState from JSON (factory constructor)
+  - `fromJson
+  
+  ()`: Create AppState from JSON (factory constructor)
   - `copyWith()`: Create a copy with modified properties (returns `AppState`)
 
 - Make it immutable.
