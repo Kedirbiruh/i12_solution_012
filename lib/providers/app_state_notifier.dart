@@ -37,12 +37,14 @@ class AppStateNotifier extends Notifier<AppState> {
 
   void deleteTodos(List<Todo>()) {}
 
-  void toggleDarkMode() {}
+  void toggleDarkMode() {
+    state = state.copyWith(isDarkMode: !state.isDarkMode);
+  }
 
   void toggleDeletionConfirmation() {}
 
   void loadState() {}
-  
+
   void saveState() {}
 
 

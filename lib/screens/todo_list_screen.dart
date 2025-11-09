@@ -29,7 +29,7 @@ class TodoListScreen extends ConsumerWidget {
               padding: EdgeInsets.all(8),
               margin: EdgeInsets.all(18),
               decoration: BoxDecoration(
-                border: Border.all(color: Theme.of(context).primaryColor),
+                border: Border.all(color: Theme.of(context).colorScheme.onSurface),
                 borderRadius: BorderRadius.all(Radius.circular(8)),
               ),
               child: Row(
