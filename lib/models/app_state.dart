@@ -27,5 +27,8 @@ class AppState {
     bool? isDarkMode,
     bool? asksForDeletionConfirmation,
   }) =>
-      AppState(todos: [], isDarkMode: false, asksForDeletionConfirmation: true);
+      AppState(
+        todos: todos ?? this.todos, 
+        isDarkMode: isDarkMode ?? this.isDarkMode, 
+        asksForDeletionConfirmation: asksForDeletionConfirmation ?? this.asksForDeletionConfirmation,);
 }

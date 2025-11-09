@@ -19,10 +19,10 @@ class Todo {
     isCompleted: false,
   );
 
-  Todo copyWith(String? id, String? text, bool? isCompleted) => Todo(
+  Todo copyWith({String? id, String? text, bool? isCompleted}) => Todo(
     // herleiten
-    id: '',
-    text: '',
-    isCompleted: false,
+    id: id ?? this.id,
+    text: text ?? this.text,              
+    isCompleted: isCompleted ?? this.isCompleted,
   );
 }

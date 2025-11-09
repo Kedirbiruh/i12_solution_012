@@ -17,4 +17,38 @@ class AppStateNotifier extends Notifier<AppState> {
     isDarkMode: false,
     asksForDeletionConfirmation: true,
   );
+
+
+  void addTodo(String text) {}
+
+  void toggleTodo(Todo todo) {
+    final newTodo = todo.copyWith(isCompleted: !todo.isCompleted);
+    final newTodos = <Todo>[];
+      for (final t in state.todos){
+        if (t == Todo) {
+          newTodos.add(newTodo);
+        } else {
+          newTodos.add(t);
+        }
+      }
+    state = state.copyWith(todos: newTodos);
+  }
+
+
+  void deleteTodos(List<Todo>()) {}
+
+  void toggleDarkMode() {}
+
+  void toggleDeletionConfirmation() {}
+
+  void loadState() {}
+  
+  void saveState() {}
+
+
+
+
+
+
+
 }
