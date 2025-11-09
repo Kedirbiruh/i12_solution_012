@@ -1,42 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:i12_into_012/providers/app_state_notifier.dart';
+import '../providers/app_state_notifier.dart';
 
-class TodoListScreen extends ConsumerWidget {
+class SettingsScreen extends ConsumerWidget {
+  const SettingsScreen({super.key});
+
   @override
-  Widget build(BuildContext, WidgetRef ref) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final appState = ref.watch(refAppState);
-    final appStateNotifier = ref.watch(refAppState.notifier);
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Setting Screen'),
-      ),
-      body: Column(
-        children: [
-          Text('nur so'),
+    final notifier = ref.watch(refAppState.notifier);
 
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(8),
-            margin: EdgeInsets.all(18),
-            decoration: BoxDecoration(
-              border: Border.all(color: Theme.of(context).primaryColor),
-              borderRadius: BorderRadius.all(Radius.circular(8)),
+    return Scaffold(
+      appBar: AppBar(title: const Text('Settings')),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            SwitchListTile(
+              title: const Text('Dark Mode'),
+              value: appState.isDarkMode,
+              onChanged: (_) => notifier.toggleDarkMode(),
             ),
-            child: Row(
-              children: [
-                Expanded(child: Text('Dark Mode')),
-                Switch(
-                  value: appState.isDarkMode,
-                  onChanged: (isDarkMode) {
-                    appStateNotifier.toggleDarkMode();
-                  },
-                ),
-              ],
+            SwitchListTile(
+              title: const Text('Ask for Deletion Confirmation'),
+              value: appState.asksForDeletionConfirmation,
+              onChanged: (_) => notifier.toggleDeletionConfirmation(),
             ),
-          ),
-          Text('am ende'),
-        ],
+          ],
+        ),
       ),
     );
   }

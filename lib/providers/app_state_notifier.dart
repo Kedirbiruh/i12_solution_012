@@ -1,56 +1,68 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:i12_into_012/models/app_state.dart' show AppState;
-import 'package:i12_into_012/models/todo.dart' show Todo;
+import 'package:flutter_riverpod/legacy.dart';
+import 'package:uuid/uuid.dart';
+import '../models/app_state.dart';
+import '../models/todo.dart';
+import '../services/storage_service.dart';
 
-final refAppState = NotifierProvider<AppStateNotifier, AppState>(
-  () => AppStateNotifier(),
-);
+final storageServiceProvider = Provider<StorageService>((ref) {
+  return StorageService();
+});
 
-class AppStateNotifier extends Notifier<AppState> {
-  @override
-  AppState build() => AppState(
-    todos: [
-      Todo(id: 'a', text: 'Müll rausbringen', isCompleted: false),
-      Todo(id: 'b', text: 'Hausaufgaben machen', isCompleted: true),
-    ],
+final refAppState = StateNotifierProvider<AppStateNotifier, AppState>((ref) {
+  final storage = ref.watch(storageServiceProvider);
+  return AppStateNotifier(storage);
+});
 
-    isDarkMode: false,
-    asksForDeletionConfirmation: true,
-  );
+class AppStateNotifier extends StateNotifier<AppState> {
+  final StorageService _storageService;
+  final _uuid = const Uuid();
 
-
-  void addTodo(String text) {}
-
-  void toggleTodo(Todo todo) {
-    final newTodo = todo.copyWith(isCompleted: !todo.isCompleted);
-    final newTodos = <Todo>[];
-      for (final t in state.todos){
-        if (t == Todo) {
-          newTodos.add(newTodo);
-        } else {
-          newTodos.add(t);
-        }
-      }
-    state = state.copyWith(todos: newTodos);
+  AppStateNotifier(this._storageService) : super(const AppState()) {
+    loadState();
   }
 
+  Future<void> loadState() async {
+    final loaded = await _storageService.loadAppState();
+    if (loaded != null) state = loaded;
+  }
 
-  void deleteTodos(List<Todo>()) {}
+  Future<void> saveState() async {
+    await _storageService.saveAppState(state);
+  }
+
+  void addTodo(String text) {
+    if (text.trim().isEmpty) return;
+    final newTodo = Todo(id: _uuid.v4(), text: text.trim());
+    state = state.copyWith(todos: [...state.todos, newTodo]);
+    saveState();
+  }
+
+  void toggleTodo(String id) {
+    state = state.copyWith(
+      todos: state.todos
+          .map((t) => t.id == id ? t.copyWith(isCompleted: !t.isCompleted) : t)
+          .toList(),
+    );
+    saveState();
+  }
+
+  void deleteTodo(String id) {
+    state = state.copyWith(
+      todos: state.todos.where((t) => t.id != id).toList(),
+    );
+    saveState();
+  }
 
   void toggleDarkMode() {
     state = state.copyWith(isDarkMode: !state.isDarkMode);
+    saveState();
   }
 
-  void toggleDeletionConfirmation() {}
-
-  void loadState() {}
-
-  void saveState() {}
-
-
-
-
-
-
-
+  void toggleDeletionConfirmation() {
+    state = state.copyWith(
+      asksForDeletionConfirmation: !state.asksForDeletionConfirmation,
+    );
+    saveState();
+  }
 }

@@ -2,33 +2,49 @@ import 'package:i12_into_012/models/todo.dart';
 
 class AppState {
   final List<Todo> todos;
-  bool isDarkMode;
-  bool asksForDeletionConfirmation;
+  final bool isDarkMode;
+  final bool asksForDeletionConfirmation;
 
-  AppState({
-    required this.todos,
-    required this.isDarkMode,
-    required this.asksForDeletionConfirmation,
+  const AppState({
+    this.todos = const [],
+    this.isDarkMode = false,
+    this.asksForDeletionConfirmation = true,
   });
-
-  Map<String, dynamic> toJson() => {
-    // herleiten
-  };
-
-  factory AppState.fromJson(Map<String, dynamic> json) => AppState(
-    // herleiten
-    todos: [],
-    isDarkMode: false,
-    asksForDeletionConfirmation: false,
-  );
 
   AppState copyWith({
     List<Todo>? todos,
     bool? isDarkMode,
     bool? asksForDeletionConfirmation,
-  }) =>
-      AppState(
-        todos: todos ?? this.todos, 
-        isDarkMode: isDarkMode ?? this.isDarkMode, 
-        asksForDeletionConfirmation: asksForDeletionConfirmation ?? this.asksForDeletionConfirmation,);
+  }) {
+    return AppState(
+      todos: todos ?? this.todos,
+      isDarkMode: isDarkMode ?? this.isDarkMode,
+      asksForDeletionConfirmation:
+          asksForDeletionConfirmation ?? this.asksForDeletionConfirmation,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'todos': todos.map((todo) => todo.toJson()).toList(),
+      'isDarkMode': isDarkMode,
+      'asksForDeletionConfirmation': asksForDeletionConfirmation,
+    };
+  }
+
+  factory AppState.fromJson(Map<String, dynamic> json) {
+    final todosJson = json['todos'] as List?;
+    final todosList = todosJson != null
+        ? todosJson
+              .map((e) => Todo.fromJson(e as Map<String, dynamic>))
+              .toList()
+        : <Todo>[];
+
+    return AppState(
+      todos: todosList,
+      isDarkMode: json['isDarkMode'] as bool? ?? false,
+      asksForDeletionConfirmation:
+          json['asksForDeletionConfirmation'] as bool? ?? true,
+    );
+  }
 }

@@ -1,17 +1,39 @@
-import 'dart:ffi';
-import 'package:i12_into_012/models/app_state.dart';
-import 'package:i12_into_012/models/todo.dart' show Todo;
+import 'dart:io';
+import 'dart:convert';
+import 'package:path_provider/path_provider.dart';
+import '../models/app_state.dart';
 
 class StorageService {
-  void saveAppState(AppsState) {
-    // TODO Implement
+  // Pfad zum lokalen Dokumentenverzeichnis
+  Future<String> get _localPath async {
+    final directory = await getApplicationDocumentsDirectory();
+    return directory.path;
   }
-  AppState loadAppState() => AppState(
-    todos: [
-      Todo(id: 'a', text: 'Zeug reinbringen', isCompleted: false),
-      Todo(id: 'b', text: 'Hausaufgaben planen', isCompleted: true),
-    ],
-    isDarkMode: false,
-    asksForDeletionConfirmation: true,
-  );
+
+  // Die Datei, in der wir den JSON-State speichern
+  Future<File> get _localFile async {
+    final path = await _localPath;
+    return File('$path/todo_app_state.json');
+  }
+
+  // State speichern
+  Future<void> saveAppState(AppState state) async {
+    final file = await _localFile;
+    final jsonString = jsonEncode(state.toJson());
+    await file.writeAsString(jsonString);
+  }
+
+  // State laden
+  Future<AppState?> loadAppState() async {
+    try {
+      final file = await _localFile;
+      if (!await file.exists()) return null;
+      final jsonString = await file.readAsString();
+      final jsonMap = jsonDecode(jsonString) as Map<String, dynamic>;
+      return AppState.fromJson(jsonMap);
+    } catch (e) {
+      print('Error loading app state: $e');
+      return null;
+    }
+  }
 }
