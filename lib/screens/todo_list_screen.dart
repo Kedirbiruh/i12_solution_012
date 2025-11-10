@@ -17,17 +17,27 @@ class TodoListScreen extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('Meine Aufgaben'),
       ),
-      body: ListView.builder(
-        padding: const EdgeInsets.all(8),
-        itemCount: appState.todos.length,
-        itemBuilder: (context, index) {
-          final todo = appState.todos[index];
-          return TodoItem(
-            todo: todo,
-            onToggle: () => notifier.toggleTodo(todo.id),
-            onDelete: () => notifier.deleteTodo(todo.id),
-          );
-        },
+      body: Column(
+        children: [
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(8),
+            margin: EdgeInsets.all(8),
+            decoration: BoxDecoration(),
+            child: ListView.builder(
+              padding: const EdgeInsets.all(8),
+              itemCount: appState.todos.length,
+              itemBuilder: (context, index) {
+                final todo = appState.todos[index];
+                return TodoItem(
+                  todo: todo,
+                  onToggle: () => notifier.toggleTodo(todo.id),
+                  onDelete: () => notifier.deleteTodo(todo.id),
+                );
+              },
+            ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => showDialog(
