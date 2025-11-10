@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:i12_into_012/widgets/add_todo_dialog.dart';
 import '../providers/app_state_notifier.dart';
-import '../widgets/todo_item.dart';
 import '../models/todo.dart';
 
 class TodoListScreen extends ConsumerWidget {
@@ -16,23 +15,69 @@ class TodoListScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Meine Aufgaben'),
+        centerTitle: true,
+        backgroundColor: Colors.black38,
       ),
       body: Column(
         children: [
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(8),
-            margin: EdgeInsets.all(8),
-            decoration: BoxDecoration(),
+          Expanded(
             child: ListView.builder(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(12),
               itemCount: appState.todos.length,
               itemBuilder: (context, index) {
                 final todo = appState.todos[index];
-                return TodoItem(
-                  todo: todo,
-                  onToggle: () => notifier.toggleTodo(todo.id),
-                  onDelete: () => notifier.deleteTodo(todo.id),
+                return Container(
+                  margin: const EdgeInsets.symmetric(vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 213, 205, 205),
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.3),
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      IconButton(
+                        icon: Icon(
+                          todo.isCompleted
+                              ? Icons.check_circle
+                              : Icons.check_circle_outline,
+                          color: todo.isCompleted ? Colors.green : Colors.grey,
+                          size: 28,
+                        ),
+                        onPressed: () => notifier.toggleTodo(todo.id),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          todo.text,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black87, // gut lesbar
+                            decoration: todo.isCompleted
+                                ? TextDecoration.lineThrough
+                                : null,
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(
+                          Icons.delete,
+                          color: Color.fromARGB(255, 152, 70, 70),
+                          size: 28,
+                        ),
+                        onPressed: () => notifier.deleteTodo(todo.id),
+                      ),
+                    ],
+                  ),
                 );
               },
             ),
@@ -46,7 +91,8 @@ class TodoListScreen extends ConsumerWidget {
             onAdd: (text) => notifier.addTodo(text),
           ),
         ),
-        child: const Icon(Icons.add),
+        backgroundColor: const Color.fromARGB(255, 75, 71, 71),
+        child: const Icon(Icons.add, size: 32),
       ),
     );
   }

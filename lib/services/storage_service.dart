@@ -4,26 +4,21 @@ import 'package:path_provider/path_provider.dart';
 import '../models/app_state.dart';
 
 class StorageService {
-  // Pfad zum lokalen Dokumentenverzeichnis
   Future<String> get _localPath async {
-    final directory = await getApplicationDocumentsDirectory();
-    return directory.path;
+    final dir = await getApplicationDocumentsDirectory();
+    return dir.path;
   }
 
-  // Die Datei, in der wir den JSON-State speichern
   Future<File> get _localFile async {
     final path = await _localPath;
     return File('$path/todo_app_state.json');
   }
 
-  // State speichern
   Future<void> saveAppState(AppState state) async {
     final file = await _localFile;
-    final jsonString = jsonEncode(state.toJson());
-    await file.writeAsString(jsonString);
+    await file.writeAsString(jsonEncode(state.toJson()));
   }
 
-  // State laden
   Future<AppState?> loadAppState() async {
     try {
       final file = await _localFile;
