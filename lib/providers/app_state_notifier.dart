@@ -21,7 +21,7 @@ class AppStateNotifier extends StateNotifier<AppState> {
     if (loaded != null && loaded.todos.isNotEmpty) {
       state = loaded;
     } else {
-      // Beispiel-Todos beim ersten Start
+      
       state = state.copyWith(
         todos: [
           Todo.create('Einkaufen gehen'),

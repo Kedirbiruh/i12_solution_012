@@ -11,7 +11,6 @@ class Todo {
     this.isCompleted = false,
   });
 
-  /// 🆕 Factory-Methode, um bequem ein neues Todo zu erstellen
   factory Todo.create(String text) {
     return Todo(
       id: const Uuid().v4(),
@@ -20,7 +19,6 @@ class Todo {
     );
   }
 
-  /// ✅ Zum Kopieren mit Änderungen (immutables Muster)
   Todo copyWith({String? id, String? text, bool? isCompleted}) {
     return Todo(
       id: id ?? this.id,
@@ -29,14 +27,12 @@ class Todo {
     );
   }
 
-  /// 🔄 Für das lokale Speichern als JSON
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'text': text,
-        'isCompleted': isCompleted,
-      };
+    'id': id,
+    'text': text,
+    'isCompleted': isCompleted,
+  };
 
-  /// 🔁 Umwandlung von JSON zurück in ein Todo
   factory Todo.fromJson(Map<String, dynamic> json) {
     return Todo(
       id: json['id'] as String,
