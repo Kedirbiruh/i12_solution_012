@@ -39,7 +39,7 @@ class TodoListScreen extends ConsumerWidget {
                   child: Row(
                     children: [
                       IconButton(
-                        icon: Icon(
+                        icon: Icon(                                                                                                                   
                           todo.isCompleted
                               ? Icons.check_circle
                               : Icons.check_circle_outline,
