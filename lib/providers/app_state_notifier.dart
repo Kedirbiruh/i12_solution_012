@@ -5,37 +5,38 @@ import '../models/app_state.dart';
 import '../models/todo.dart';
 import '../services/storage_service.dart';
 
-final storageServiceProvider = Provider<StorageService>((ref) {
-  return StorageService();
-});
-
-final refAppState = StateNotifierProvider<AppStateNotifier, AppState>((ref) {
-  final storage = ref.watch(storageServiceProvider);
-  return AppStateNotifier(storage);
-});
+final refAppState = StateNotifierProvider<AppStateNotifier, AppState>(
+  (ref) => AppStateNotifier(),
+);
 
 class AppStateNotifier extends StateNotifier<AppState> {
-  final StorageService _storageService;
-  final _uuid = const Uuid();
-
-  AppStateNotifier(this._storageService) : super(const AppState()) {
-    loadState();
+  AppStateNotifier() : super(const AppState()) {
+    _init();
   }
 
-  Future<void> loadState() async {
-    final loaded = await _storageService.loadAppState();
-    if (loaded != null) state = loaded;
-  }
+  Future<void> _init() async {
+    final storage = StorageService();
+    final loaded = await storage.loadAppState();
 
-  Future<void> saveState() async {
-    await _storageService.saveAppState(state);
+    if (loaded != null && loaded.todos.isNotEmpty) {
+      state = loaded;
+    } else {
+      // Beispiel-Todos beim ersten Start
+      state = state.copyWith(
+        todos: [
+          Todo.create('Einkaufen gehen'),
+          Todo.create('Flutter üben'),
+          Todo.create('Zimmer aufräumen'),
+        ],
+      );
+      await storage.saveAppState(state);
+    }
   }
 
   void addTodo(String text) {
-    if (text.trim().isEmpty) return;
-    final newTodo = Todo(id: _uuid.v4(), text: text.trim());
+    final newTodo = Todo.create(text);
     state = state.copyWith(todos: [...state.todos, newTodo]);
-    saveState();
+    _save();
   }
 
   void toggleTodo(String id) {
@@ -44,25 +45,30 @@ class AppStateNotifier extends StateNotifier<AppState> {
           .map((t) => t.id == id ? t.copyWith(isCompleted: !t.isCompleted) : t)
           .toList(),
     );
-    saveState();
+    _save();
   }
 
   void deleteTodo(String id) {
     state = state.copyWith(
       todos: state.todos.where((t) => t.id != id).toList(),
     );
-    saveState();
+    _save();
   }
 
   void toggleDarkMode() {
     state = state.copyWith(isDarkMode: !state.isDarkMode);
-    saveState();
+    _save();
   }
 
   void toggleDeletionConfirmation() {
     state = state.copyWith(
       asksForDeletionConfirmation: !state.asksForDeletionConfirmation,
     );
-    saveState();
+    _save();
+  }
+
+  Future<void> _save() async {
+    final storage = StorageService();
+    await storage.saveAppState(state);
   }
 }

@@ -8,27 +8,28 @@ class SettingsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appState = ref.watch(refAppState);
-    final notifier = ref.watch(refAppState.notifier);
+    final notifier = ref.read(refAppState.notifier);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            SwitchListTile(
-              title: const Text('Dark Mode'),
-              value: appState.isDarkMode,
-              onChanged: (_) => notifier.toggleDarkMode(),
-            ),
-            SwitchListTile(
-              title: const Text('Ask for Deletion Confirmation'),
-              value: appState.asksForDeletionConfirmation,
-              onChanged: (_) => notifier.toggleDeletionConfirmation(),
-            ),
-          ],
-        ),
+      appBar: AppBar(
+        title: const Text('Einstellungen'),
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          SwitchListTile(
+            title: const Text('Dark Mode'),
+            value: appState.isDarkMode,
+            onChanged: (_) => notifier.toggleDarkMode(),
+          ),
+          SwitchListTile(
+            title: const Text('Vor dem Löschen nachfragen'),
+            value: appState.asksForDeletionConfirmation,
+            onChanged: (_) => notifier.toggleDeletionConfirmation(),
+          ),
+        ],
       ),
     );
   }
 }
+

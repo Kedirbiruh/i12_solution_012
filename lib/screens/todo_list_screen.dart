@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:i12_into_012/widgets/add_todo_dialog.dart';
 import '../providers/app_state_notifier.dart';
+import '../widgets/todo_item.dart';
+import '../models/todo.dart';
 
 class TodoListScreen extends ConsumerWidget {
   const TodoListScreen({super.key});
@@ -12,22 +15,28 @@ class TodoListScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Settings'),
+        title: const Text('Meine Aufgaben'),
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          SwitchListTile(
-            title: const Text('Dark Mode'),
-            value: appState.isDarkMode,
-            onChanged: (_) => notifier.toggleDarkMode(),
+      body: ListView.builder(
+        padding: const EdgeInsets.all(8),
+        itemCount: appState.todos.length,
+        itemBuilder: (context, index) {
+          final todo = appState.todos[index];
+          return TodoItem(
+            todo: todo,
+            onToggle: () => notifier.toggleTodo(todo.id),
+            onDelete: () => notifier.deleteTodo(todo.id),
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => showDialog(
+          context: context,
+          builder: (_) => AddTodoDialog(
+            onAdd: (text) => notifier.addTodo(text),
           ),
-          SwitchListTile(
-            title: const Text('Ask before deleting todos'),
-            value: appState.asksForDeletionConfirmation,
-            onChanged: (_) => notifier.toggleDeletionConfirmation(),
-          ),
-        ],
+        ),
+        child: const Icon(Icons.add),
       ),
     );
   }
