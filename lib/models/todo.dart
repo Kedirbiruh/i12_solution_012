@@ -15,7 +15,6 @@ class Todo {
     return Todo(
       id: const Uuid().v4(),
       text: text,
-      isCompleted: false,
     );
   }
 

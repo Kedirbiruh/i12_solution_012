@@ -24,7 +24,7 @@ class AppState {
     );
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic>toJson () {
     return {
       'todos': todos.map((todo) => todo.toJson()).toList(),
       'isDarkMode': isDarkMode,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:i12_into_012/screens/setttings_screen.dart';
 import 'package:i12_into_012/widgets/add_todo_dialog.dart';
 import '../providers/app_state_notifier.dart';
 import '../models/todo.dart';
@@ -17,6 +18,17 @@ class TodoListScreen extends ConsumerWidget {
         title: const Text('Meine Aufgaben'),
         centerTitle: true,
         backgroundColor: Colors.black38,
+        actions: [
+          ElevatedButton(
+            onPressed: () => Navigator.push<void>(
+              context,
+              MaterialPageRoute<void>(
+                builder: (BuildContext context) => const SettingsScreen(),
+              ),
+            ),
+            child: const Icon(Icons.settings),
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -39,7 +51,7 @@ class TodoListScreen extends ConsumerWidget {
                   child: Row(
                     children: [
                       IconButton(
-                        icon: Icon(                                                                                                                   
+                        icon: Icon(
                           todo.isCompleted
                               ? Icons.check_circle
                               : Icons.check_circle_outline,
