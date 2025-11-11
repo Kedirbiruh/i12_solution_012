@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:i12_into_012/providers/app_state_notifier.dart';
 import 'package:i12_into_012/screens/setttings_screen.dart';
 import 'package:i12_into_012/widgets/add_todo_dialog.dart';
-import '../providers/app_state_notifier.dart';
-import '../models/todo.dart';
 
 class TodoListScreen extends ConsumerWidget {
   const TodoListScreen({super.key});
@@ -79,33 +78,37 @@ class TodoListScreen extends ConsumerWidget {
                           color: Color.fromARGB(255, 152, 70, 70),
                           size: 28,
                         ),
-                        onPressed: () async {
-                          final confirm = await showDialog<bool>(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: const Text('Löschen?'),
-                              content: const Text(
-                                'Möchtest du diese Aufgabe wirklich löschen?',
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () =>
-                                      Navigator.of(context).pop(false),
-                                  child: const Text('Nein'),
-                                ),
-                                TextButton(
-                                  onPressed: () =>
-                                      Navigator.of(context).pop(true),
-                                  child: const Text('Ja'),
-                                ),
-                              ],
-                            ),
-                          );
+                        onPressed: appState.asksForDeletionConfirmation
+                            ? () async {
+                                final confirm = await showDialog<bool>(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    backgroundColor: Colors.red,
+                                    title: const Text('Löschen?'),
+                                    content: const Text(
+                                      'Möchtest du diese Aufgabe wirklich löschen?',
+                                    ),
 
-                          if (confirm == true) {
-                            notifier.deleteTodo(todo.id);
-                          }
-                        },
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.of(context).pop(false),
+                                        child: const Text('Nein'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.of(context).pop(true),
+                                        child: const Text('Ja'),
+                                      ),
+                                    ],
+                                  ),
+                                );
+
+                                if (confirm ?? false) {
+                                  notifier.deleteTodo(todo.id);
+                                }
+                              }
+                            : () => notifier.deleteTodo(todo.id),
                       ),
                     ],
                   ),
@@ -116,9 +119,9 @@ class TodoListScreen extends ConsumerWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => showDialog(
+        onPressed: () => showDialog<void>(
           context: context,
-          builder: (_) => AddTodoDialog(
+          builder: (context) => AddTodoDialog(
             onAdd: (text) => notifier.addTodo(text),
           ),
         ),

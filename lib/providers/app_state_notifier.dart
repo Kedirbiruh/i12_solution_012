@@ -1,9 +1,7 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:uuid/uuid.dart';
-import '../models/app_state.dart';
-import '../models/todo.dart';
-import '../services/storage_service.dart';
+import 'package:i12_into_012/models/app_state.dart';
+import 'package:i12_into_012/models/todo.dart';
+import 'package:i12_into_012/services/storage_service.dart';
 
 final refAppState = StateNotifierProvider<AppStateNotifier, AppState>(
   (ref) => AppStateNotifier(),
@@ -21,7 +19,6 @@ class AppStateNotifier extends StateNotifier<AppState> {
     if (loaded != null && loaded.todos.isNotEmpty) {
       state = loaded;
     } else {
-      
       state = state.copyWith(
         todos: [
           Todo.create('Einkaufen gehen'),

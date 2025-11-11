@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:path_provider/path_provider.dart';
 import '../models/app_state.dart';
 
-class StorageService {
+class StorageService {   // speichern und wieder laden, damit beim Neustart nichts verloren geht
   Future<String> get _localPath async {
     final dir = await getApplicationDocumentsDirectory();
     return dir.path;
