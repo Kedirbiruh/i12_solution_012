@@ -79,7 +79,33 @@ class TodoListScreen extends ConsumerWidget {
                           color: Color.fromARGB(255, 152, 70, 70),
                           size: 28,
                         ),
-                        onPressed: () => notifier.deleteTodo(todo.id),
+                        onPressed: () async {
+                          final confirm = await showDialog<bool>(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: const Text('Löschen?'),
+                              content: const Text(
+                                'Möchtest du diese Aufgabe wirklich löschen?',
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.of(context).pop(false),
+                                  child: const Text('Nein'),
+                                ),
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.of(context).pop(true),
+                                  child: const Text('Ja'),
+                                ),
+                              ],
+                            ),
+                          );
+
+                          if (confirm == true) {
+                            notifier.deleteTodo(todo.id);
+                          }
+                        },
                       ),
                     ],
                   ),
