@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:i12_into_012/providers/app_state_notifier.dart';
+import 'package:i12_into_012/providers/json_notifier.dart';
 import 'package:i12_into_012/screens/setttings_screen.dart';
 import 'package:i12_into_012/widgets/add_todo_dialog.dart';
 

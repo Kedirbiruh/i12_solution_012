@@ -1,13 +1,14 @@
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:i12_into_012/models/app_state.dart';
-import 'package:i12_into_012/models/app_state_agent.dart';
 import 'package:i12_into_012/models/todo.dart';
 import 'package:i12_into_012/services/storage_service.dart';
 
-abstract class AppStateNotifier extends StateNotifier<AppState> {
-  AppStateAgent appStateAgent;
-  AppStateNotifier() 
-  : super(const AppState()) {
+final refAppState = StateNotifierProvider<AppStateNotifier, AppState>(
+  (ref) => AppStateNotifier(),
+);
+
+class AppStateNotifier extends StateNotifier<AppState> {
+  AppStateNotifier() : super(const AppState()) {
     _init();
   }
 
@@ -18,6 +19,7 @@ abstract class AppStateNotifier extends StateNotifier<AppState> {
     if (loaded != null && loaded.todos.isNotEmpty) {
       state = loaded;
     } else {
+
       state = state.copyWith(
         todos: [
           Todo.create('Einkaufen gehen'),
@@ -29,22 +31,10 @@ abstract class AppStateNotifier extends StateNotifier<AppState> {
     }
   }
 
-  /*
   void addTodo(String text) {
     final newTodo = Todo.create(text);
     state = state.copyWith(todos: [...state.todos, newTodo]);
     _save();
-  }
-*/
-  void addTodo(String text) {
-    Todo newTodo = appStateAgent.addTodo(state, text);
-    state = appStateAgent.state;
-    sqliteAddTodo(todo);
-  }
-
-  AppState _addTodo(AppState state, String text) {
-    final newTodo = Todo.create(text);
-    return state.copyWith(todos: [...state.todos, newTodo]);
   }
 
   void toggleTodo(String id) {
