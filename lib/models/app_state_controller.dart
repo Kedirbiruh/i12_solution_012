@@ -15,10 +15,10 @@ class AppstateController {
 
   AppState get state {
     if (_state == null)
-      throw Exception('Trying to access null-state');
+    throw Exception('Trying to access null-state');
     return _state!;
   }
-  
+
   Todo deleteTodo(AppState state, String id) {
     _state = state.copyWith(
       todos: state.todos.where((t) => t.id != id).toList(),

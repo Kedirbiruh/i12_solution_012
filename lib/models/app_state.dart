@@ -24,7 +24,7 @@ class AppState {
     );
   }
 
-  Map<String, dynamic>toJson () {
+  Map<String, dynamic> toJson() {
     return {
       'todos': todos.map((todo) => todo.toJson()).toList(),
       'isDarkMode': isDarkMode,
@@ -32,19 +32,22 @@ class AppState {
     };
   }
 
-  factory AppState.fromJson(Map<String, dynamic> json) {
+/*
+  AppState todosFromJson(Map<String, dynamic> json) {
     final todosJson = json['todos'] as List?;
     final todosList = todosJson != null
         ? todosJson
               .map((e) => Todo.fromJson(e as Map<String, dynamic>))
               .toList()
         : <Todo>[];
+    return copyWith(todos: todosList);
+  }
+*/
+  factory AppState.todosFromJson(List<Map<String, dynamic>> json) {
+    final todos = json.map(Todo.fromJson).toList();
 
     return AppState(
-      todos: todosList,
-      isDarkMode: json['isDarkMode'] as bool? ?? false,
-      asksForDeletionConfirmation:
-          json['asksForDeletionConfirmation'] as bool? ?? true,
+      todos: todos
     );
   }
 }

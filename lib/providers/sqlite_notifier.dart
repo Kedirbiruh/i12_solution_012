@@ -1,18 +1,17 @@
 import 'dart:developer';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:i12_into_012/models/app_state.dart';
 import 'package:i12_into_012/models/app_state_controller.dart';
 import 'package:i12_into_012/models/todo.dart';
 import 'package:i12_into_012/providers/app_state_notifier.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:i12_into_012/models/app_state.dart';
 
-const String DATABASE_NAME = 'todo_app_items.db';
+const String databaseName = 'todo_app_items.db';
 
 final databaseProvider = FutureProvider<Database>((ref) async {
   var databasesPath = await getDatabasesPath();
-  final path = join(databasesPath, DATABASE_NAME);
+  final path = join(databasesPath, databaseName);
   try {
     Database database = await openDatabase(
       path,
@@ -33,9 +32,17 @@ final databaseProvider = FutureProvider<Database>((ref) async {
 class SqliteNotifier extends AppStateNotifier {
   final Ref _ref;
 
-  SqliteNotifier(this._ref, AppState initialState) : super(initialState);
+  SqliteNotifier(this._ref, AppState initialState) : super(initialState) {
+    loadTodos();
+  }
 
   AppstateController controller = AppstateController();
+
+  Future<void> loadTodos() async {
+    final db = await _ref.read(databaseProvider.future);
+    final todoMaps = await db.query('Todo');
+    state = AppState.todosFromJson(todoMaps);
+  }
 
   @override
   Future<void> toggleTodo(String id) async {
