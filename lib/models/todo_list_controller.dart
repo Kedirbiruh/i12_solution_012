@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:i12_into_012/models/todo.dart';
 
 class TodoListController {
@@ -31,9 +29,6 @@ class TodoListController {
     final List<Todo> todoList = [];
     for (final item in todoMap) {
       todoList.add(Todo.fromJson(item));
-    }
-    for (final x in todoList) {
-      log('$x');
     }
     return todoList;
   }
