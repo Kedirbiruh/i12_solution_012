@@ -1,42 +1,26 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:uuid/uuid.dart';
 
-class Todo {
-  final String id;
-  final String text;
-  final bool isCompleted;
+part 'todo.freezed.dart';
+part 'todo.g.dart';
 
-  const Todo({
-    required this.id,
-    required this.text,
-    this.isCompleted = false,
-  });
+int _boolToInt(bool value) => value ? 1 : 0;
+bool _intToBool(int value) => value != 0;
 
-  factory Todo.create(String text) {
-    return Todo(
-      id: const Uuid().v4(),
-      text: text,
-    );
-  }
+@freezed
+abstract class Todo with _$Todo {
+  const factory Todo({
+    required String id,
+    required String text,
+    @JsonKey(fromJson: _intToBool, toJson: _boolToInt)
+    @Default(false)
+    bool isCompleted,
+  }) = _Todo;
 
-  Todo copyWith({String? id, String? text, bool? isCompleted}) {
-    return Todo(
-      id: id ?? this.id,
-      text: text ?? this.text,
-      isCompleted: isCompleted ?? this.isCompleted,
-    );
-  }
+  factory Todo.create(String text) => Todo(
+    id: const Uuid().v4(),
+    text: text,
+  );
 
-  Map<String, dynamic> toJson() => {
-    'id': id,
-    'text': text,
-    'isCompleted': isCompleted,
-  };
-
-  factory Todo.fromJson(Map<String, dynamic> json) {
-    return Todo(
-      id: json['id'] as String,
-      text: json['text'] as String,
-      isCompleted: json['isCompleted'] as bool? ?? false,
-    );
-  }
+  factory Todo.fromJson(Map<String, dynamic> json) => _$TodoFromJson(json);
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:i12_into_012/providers/json_notifier.dart';
+import 'package:i12_into_012/providers/providers.dart';
+import 'package:i12_into_012/providers/todo_notifier_interface.dart';
 import 'package:i12_into_012/screens/setttings_screen.dart';
 import 'package:i12_into_012/widgets/add_todo_dialog.dart';
 
@@ -9,9 +11,9 @@ class TodoListScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final appState = ref.watch(refAppState);
-    final notifier = ref.read(refAppState.notifier);
-
+    final todos = ref.watch(todoNotifierProvider);
+    final notifier = ref.read(todoNotifierProvider.notifier) as TodoNotifierInterface;
+    final settings = ref.watch(settingsNotifierProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Meine Aufgaben'),
@@ -34,9 +36,9 @@ class TodoListScreen extends ConsumerWidget {
           Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.all(12),
-              itemCount: appState.todos.length,
+              itemCount: todos.length,
               itemBuilder: (context, index) {
-                final todo = appState.todos[index];
+                final todo = todos[index];
                 return Container(
                   margin: const EdgeInsets.symmetric(vertical: 6),
                   padding: const EdgeInsets.symmetric(
@@ -78,7 +80,7 @@ class TodoListScreen extends ConsumerWidget {
                           color: Color.fromARGB(255, 152, 70, 70),
                           size: 28,
                         ),
-                        onPressed: appState.asksForDeletionConfirmation
+                        onPressed: settings.askConfirmationBeforeDelete
                             ? () async {
                                 final confirm = await showDialog<bool>(
                                   context: context,

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/json_notifier.dart';
+import 'package:i12_into_012/providers/providers.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final appState = ref.watch(refAppState);
-    final notifier = ref.read(refAppState.notifier);
+    final settings = ref.watch(settingsNotifierProvider);
+    final notifier = ref.read(settingsNotifierProvider.notifier);
 
     return Scaffold(
       appBar: AppBar(
@@ -19,13 +19,13 @@ class SettingsScreen extends ConsumerWidget {
         children: [
           SwitchListTile(
             title: const Text('Dark Mode'),
-            value: appState.isDarkMode,
+            value: settings.isDarkMode,
             onChanged: (_) => notifier.toggleDarkMode(),
           ),
           SwitchListTile(
             title: const Text('Vor dem Löschen nachfragen'),
-            value: appState.asksForDeletionConfirmation,
-            onChanged: (_) => notifier.toggleDeletionConfirmation(),
+            value: settings.askConfirmationBeforeDelete,
+            onChanged: (_) => notifier.toggleAskConfirmationBeforeDelete(),
           ),
         ],
       ),

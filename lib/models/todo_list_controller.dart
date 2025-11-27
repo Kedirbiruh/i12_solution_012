@@ -1,4 +1,3 @@
-
 import 'package:i12_into_012/models/todo.dart';
 
 class TodoListController {
@@ -7,7 +6,7 @@ class TodoListController {
     _state = state
         .map((t) => t.id == id ? t.copyWith(isCompleted: !t.isCompleted) : t)
         .toList();
-    return state.firstWhere((todo) => todo.id == id);
+    return _state!.firstWhere((todo) => todo.id == id);
   }
 
   List<Todo> get state {
@@ -32,5 +31,14 @@ class TodoListController {
       todoList.add(Todo.fromJson(item));
     }
     return todoList;
+  }
+
+  /*
+   * todos: [{id: 124, text: "blah", isDone: true}, {}, ...]
+   */
+  Map<String, dynamic> toJson(List<Todo> todos) {
+    return {
+      'todos': todos.map((todo) => todo.toJson()).toList(),
+    };
   }
 }

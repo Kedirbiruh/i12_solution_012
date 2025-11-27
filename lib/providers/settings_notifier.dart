@@ -36,7 +36,7 @@ class SettingsNotifier extends Notifier<Settings> {
     await _file.writeAsString(jsonEncode(s.toJson()));
   }
 
-  Future<void> toggleIsDarkMode() async {
+  Future<void> toggleDarkMode() async {
     final updated = state.copyWith(isDarkMode: !state.isDarkMode);
     state = updated;
     await _save(updated);

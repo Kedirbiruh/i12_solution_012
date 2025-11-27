@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:i12_into_012/models/todo.dart';
 import 'package:i12_into_012/models/todo_list_controller.dart';
-import 'package:i12_into_012/providers/app_state_notifier.dart';
+import 'package:i12_into_012/providers/todo_notifier_interface.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -49,19 +49,19 @@ class SqliteNotifier extends Notifier<List<Todo>>
   @override
   Future<void> toggleTodo(String id) async {
     final newTodo = controller.toggleTodo(state, id);
-    if (!await _addTodo(newTodo)) state = controller.state;
+    if (await _addTodo(newTodo)) state = controller.state;
   }
 
   @override
   Future<void> addTodo(String text) async {
     final newTodo = controller.addTodo(state, text);
-    if (!await _addTodo(newTodo)) state = controller.state;
+    if (await _addTodo(newTodo)) state = controller.state;
   }
 
   @override
   Future<void> deleteTodo(String id) async {
     final deletedTodo = controller.deleteTodo(state, id);
-    if (!await _deleteTodo(deletedTodo)) state = controller.state;
+    if (await _deleteTodo(deletedTodo)) state = controller.state;
   }
 
   Future<bool> _addTodo(Todo item) async {
