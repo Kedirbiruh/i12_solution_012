@@ -8,12 +8,6 @@ import 'package:i12_into_012/providers/todo_notifier_interface.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
-/*
-final refAppState = StateNotifierProvider<AppStateNotifier, AppState>(
-  (ref) => AppStateNotifier(),
-);
-*/
-
 const String todoListFileName = 'todo_list.json';
 
 final jsonFileProvider = FutureProvider<File>((ref) async {
@@ -34,7 +28,6 @@ class JsonNotifier extends Notifier<List<Todo>>
 
   Future<void> _init() async {
     final loaded = await loadTodoList();
-
     if (loaded != null && loaded.isNotEmpty) {
       state = loaded;
     } else {
@@ -54,25 +47,25 @@ class JsonNotifier extends Notifier<List<Todo>>
   @override
   Future<void> addTodo(String text) async {
     controller.addTodo(state, text);
-    if (await _save()) state = controller.state;
+    if (await _save(controller.state)) state = controller.state;
   }
 
   @override
   Future<void> toggleTodo(String id) async {
     controller.toggleTodo(state, id);
-    if (await _save()) state = controller.state;
+    if (await _save(controller.state)) state = controller.state;
   }
 
   @override
   Future<void> deleteTodo(String id) async {
     controller.deleteTodo(state, id);
-    if (await _save()) state = controller.state;
+    if (await _save(controller.state)) state = controller.state;
   }
 
-  Future<bool> _save() async {
+  Future<bool> _save(List<Todo> todos) async {
     final file = await ref.read(jsonFileProvider.future);
     try {
-      await file.writeAsString(jsonEncode(controller.toJson(state)));
+      await file.writeAsString(jsonEncode(controller.toJson(todos)));
       return true;
     } on FileSystemException catch (e) {
       log('Failed to write file "${file.path}: $e"');

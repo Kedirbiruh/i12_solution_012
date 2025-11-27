@@ -23,5 +23,5 @@ final jsonTodoProvider = NotifierProvider<JsonNotifier, List<Todo>>(
 // so we use Notifier<List<Todo>> as the common notifier type.
 final NotifierProvider<Notifier<List<Todo>>, List<Todo>> todoNotifierProvider =
     storageBackendType == StorageBackend.SQLite
-        ? sqliteTodoProvider
-        : jsonTodoProvider;
+    ? sqliteTodoProvider
+    : jsonTodoProvider;
