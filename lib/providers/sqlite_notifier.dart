@@ -1,16 +1,17 @@
 import 'dart:developer';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:i12_into_012/models/app_state.dart';
-import 'package:i12_into_012/models/app_state_controller.dart';
 import 'package:i12_into_012/models/todo.dart';
+import 'package:i12_into_012/models/todo_list_controller.dart';
 import 'package:i12_into_012/providers/app_state_notifier.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 const String databaseName = 'todo_app_items.db';
+const String tabelName = 'Todo';
 
 final databaseProvider = FutureProvider<Database>((ref) async {
-  var databasesPath = await getDatabasesPath();
+  final databasesPath = await getDatabasesPath();
   final path = join(databasesPath, databaseName);
   try {
     Database database = await openDatabase(
@@ -29,19 +30,20 @@ final databaseProvider = FutureProvider<Database>((ref) async {
   }
 });
 
-class SqliteNotifier extends AppStateNotifier {
-  final Ref _ref;
+class SqliteNotifier extends Notifier<List<Todo>>
+    implements TodoNotifierInterface {
+  TodoListController controller = TodoListController();
 
-  SqliteNotifier(this._ref, AppState initialState) : super(initialState) {
-    loadTodos();
+  @override
+  List<Todo> build() {
+    _init();
+    return [];
   }
 
-  AppstateController controller = AppstateController();
-
-  Future<void> loadTodos() async {
-    final db = await _ref.read(databaseProvider.future);
-    final todoMaps = await db.query('Todo');
-    state = AppState.todosFromJson(todoMaps);
+  Future<void> _init() async {
+    final db = await ref.read(databaseProvider.future);
+    final todoMaps = await db.query(tabelName);
+    state = controller.todoListFromJson(todoMaps);
   }
 
   @override
@@ -63,7 +65,7 @@ class SqliteNotifier extends AppStateNotifier {
   }
 
   Future<bool> _addTodo(Todo item) async {
-    final db = await _ref.read(databaseProvider.future);
+    final db = await ref.read(databaseProvider.future);
     try {
       await db.insert(
         'Todo',
@@ -78,7 +80,7 @@ class SqliteNotifier extends AppStateNotifier {
   }
 
   Future<bool> _deleteTodo(Todo item) async {
-    final db = await _ref.read(databaseProvider.future);
+    final db = await ref.read(databaseProvider.future);
     try {
       await db.delete(
         'Todo',

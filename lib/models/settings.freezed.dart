@@ -11,6 +11,7 @@ part of 'settings.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
+
 /// @nodoc
 mixin _$Settings {
 
@@ -21,6 +22,8 @@ mixin _$Settings {
 @pragma('vm:prefer-inline')
 $SettingsCopyWith<Settings> get copyWith => _$SettingsCopyWithImpl<Settings>(this as Settings, _$identity);
 
+  /// Serializes this Settings to a JSON map.
+  Map<String, dynamic> toJson();
 
 
 @override
@@ -28,7 +31,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is Settings&&(identical(other.isDarkMode, isDarkMode) || other.isDarkMode == isDarkMode)&&(identical(other.askConfirmationBeforeDelete, askConfirmationBeforeDelete) || other.askConfirmationBeforeDelete == askConfirmationBeforeDelete));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,isDarkMode,askConfirmationBeforeDelete);
 
@@ -204,11 +207,11 @@ return $default(_that.isDarkMode,_that.askConfirmationBeforeDelete);case _:
 }
 
 /// @nodoc
-
+@JsonSerializable()
 
 class _Settings implements Settings {
   const _Settings({this.isDarkMode = false, this.askConfirmationBeforeDelete = true});
-  
+  factory _Settings.fromJson(Map<String, dynamic> json) => _$SettingsFromJson(json);
 
 @override@JsonKey() final  bool isDarkMode;
 @override@JsonKey() final  bool askConfirmationBeforeDelete;
@@ -219,14 +222,17 @@ class _Settings implements Settings {
 @pragma('vm:prefer-inline')
 _$SettingsCopyWith<_Settings> get copyWith => __$SettingsCopyWithImpl<_Settings>(this, _$identity);
 
-
+@override
+Map<String, dynamic> toJson() {
+  return _$SettingsToJson(this, );
+}
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _Settings&&(identical(other.isDarkMode, isDarkMode) || other.isDarkMode == isDarkMode)&&(identical(other.askConfirmationBeforeDelete, askConfirmationBeforeDelete) || other.askConfirmationBeforeDelete == askConfirmationBeforeDelete));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,isDarkMode,askConfirmationBeforeDelete);
 
