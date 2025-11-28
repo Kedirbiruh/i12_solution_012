@@ -25,3 +25,4 @@ final NotifierProvider<Notifier<List<Todo>>, List<Todo>> todoNotifierProvider =
     storageBackendType == StorageBackend.SQLite
     ? sqliteTodoProvider
     : jsonTodoProvider;
+
